@@ -1,25 +1,26 @@
-from typing import List, Tuple
+from typing import List
 from attribute import Attribute
 from skill import Skill
 import random
 
 class Character:
-    def __init__(self, attributes: Attribute, skills: List[Skill] = []):
+    def __init__(self, name: str, attributes: Attribute, skills: List[Skill]):
         if not isinstance(attributes, Attribute):
             raise ValueError("attributes must be an instance of Attribute")
+        self.name = name
         self.attributes = attributes
         self.skills = skills
         self.hp = (self.attributes.constitution + self.attributes.size) // 10
         self.mp = self.attributes.power // 5
-        self.db = self.calculate_db()
+        self.db = self.calculate_db(self.attributes.strength, self.attributes.size)
 
     @classmethod
-    def of(cls, attribute_params: dict, skills: List[Skill] = []) -> "Character":
+    def of(cls, name: str, attribute_params: dict, skills: List[Skill] = []) -> "Character":
         attributes = Attribute(**attribute_params)
-        return cls(attributes, skills)
+        return cls(name, attributes, skills)
 
     @classmethod
-    def of_random(cls, skills: List[Skill] = []) -> "Character":
+    def of_random(cls, name: str, skills: List[Skill]) -> "Character":
         attribute_params = {
             "strength": cls.roll_dice(3, 6) * 5,
             "constitution": cls.roll_dice(3, 6) * 5,
@@ -31,19 +32,16 @@ class Character:
             "education": (cls.roll_dice(2, 6) + 6) * 5,
             "luck": cls.roll_dice(3, 6) * 5,
         }
-        attribute_params["damage_bonus"] = cls.calculate_damage_bonus(
-            attribute_params["strength"], attribute_params["size"]
-        )
         attributes = Attribute(**attribute_params)
-        return cls(attributes, skills)
+        return cls(name, attributes, skills)
 
     @staticmethod
     def roll_dice(n: int, sides: int) -> int:
         return sum(random.randint(1, sides) for _ in range(n))
 
     @staticmethod
-    def calculate_db(self) -> str:
-        combined = self.attributes.strength + self.attributes.size
+    def calculate_db(strength: int, size: int) -> str:
+        combined = strength + size
 
         if 2 <= combined <= 64:
             return "-2"
@@ -62,6 +60,13 @@ class Character:
         if not isinstance(skill, Skill):
             raise ValueError("skill must be an instance of Skill")
         self.skills.append(skill)
+
+    def side(self) -> str:
+        return self.side
+
+    def set_side(self, side: str) -> "Character":
+        self.side = side
+        return self
 
     def __repr__(self) -> str:
         skills_str = ", ".join([str(skill) for skill in self.skills])

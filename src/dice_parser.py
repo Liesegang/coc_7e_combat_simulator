@@ -2,7 +2,6 @@ import ply.lex as lex
 import ply.yacc as yacc
 import random
 
-
 class DiceParser:
     def __init__(self):
         self.dice_rolls = []

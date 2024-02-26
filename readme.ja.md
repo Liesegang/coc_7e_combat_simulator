@@ -28,21 +28,14 @@
 例:
 
 ```python
-from character import Character, Skill
-from combat_simulation import combat_simulation
+from combat_simulator import CombatSimulator
 
-# Define character attributes and skills
-attributes_char1 = {"strength": 50, "constitution": 60, "size": 55, "dexterity": 70, "appearance": 65, "intelligence": 80, "power": 45, "education": 70, "luck": 60}
-skill_char1 = Skill(name="Punch", success_rate=50, damage="1d3")
-char1 = Character.of(attributes_char1, [skill_char1])
+# group A has 4 members, group B has 3 members
+# Status of all characters are generated randomly before every combat
+simulator = CombatSimulator(4, 3)
+results = simulator.simulate_multiple_combats(100000)
+print(results)
 
-attributes_char2 = {"strength": 65, "constitution": 70, "size": 60, "dexterity": 65, "appearance": 50, "intelligence": 75, "power": 55, "education": 65, "luck": 55}
-skill_char2 = Skill(name="Knife Attack", success_rate=65, damage="1d4+2")
-char2 = Character.of(attributes_char2, [skill_char2])
-
-# Simulate combat
-result = combat_simulation(char1, char2)
-print(result)
 ```
 
 ## カスタマイズ

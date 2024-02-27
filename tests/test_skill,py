@@ -1,0 +1,24 @@
+import unittest
+from coc7e_combat_simulator.skill import Skill
+
+
+class TestSkill(unittest.TestCase):
+
+    def test_skill_attributes(self):
+        # Test initialization and attributes
+        fighting_brawl = Skill("Fighting (Brawl)", 25, "1D3", True, False)
+        self.assertEqual(fighting_brawl.name, "Fighting (Brawl)")
+        self.assertEqual(fighting_brawl.success_rate, 25)
+        self.assertEqual(fighting_brawl.damage, "1D3")
+        self.assertTrue(fighting_brawl.physical_attack)
+        self.assertFalse(fighting_brawl.impale)
+
+    def test_skill_repr(self):
+        # Test the __repr__ method
+        firearm_handgun = Skill("Firearm (Handgun)", 20, "1D10")
+        expected_repr = "Firearm (Handgun): Success Rate: 20%, Damage: 1D10, Physical Attack: False, Impale: False"
+        self.assertEqual(repr(firearm_handgun), expected_repr)
+
+
+if __name__ == "__main__":
+    unittest.main()

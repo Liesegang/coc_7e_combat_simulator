@@ -111,9 +111,9 @@ class TestCharacter(unittest.TestCase):
         expected_repr = "Attributes: Attribute(strength=10, constitution=20, size=30, dexterity=40, " + \
             "appearance=50, intelligence=60, power=70, education=80, luck=90)\n" + \
             "HP: 5, MP: 14\n" + \
-            "Skills: Skill 1: Success Rate: 50%, Damage: 3D6, " + \
-            "Skill 2: Success Rate: 70%, Damage: 3D6, " + \
-            "Skill 3: Success Rate: 30%, Damage: 3D6"
+            "Skills: Skill 1: Success Rate: 50%, Damage: 3D6, Physical Attack: True, Impale: False, " + \
+            "Skill 2: Success Rate: 70%, Damage: 3D6, Physical Attack: False, Impale: False, " + \
+            "Skill 3: Success Rate: 30%, Damage: 3D6, Physical Attack: True, Impale: False"
         self.assertEqual(repr(self.character), expected_repr)
 
 

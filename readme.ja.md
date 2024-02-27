@@ -1,4 +1,4 @@
-# .新クトゥルフ神話TRPG 戦闘シミュレータ
+# 新クトゥルフ神話TRPG 戦闘シミュレータ
 
 このリポジトリには、新クトゥルフ神話TRPGのためのPythonベースの戦闘シミュレータが含まれています。このシミュレータは、CoCにおける戦闘シナリオをモデル化しています。キャラクターの能力値、スキル、そしてダイスロールのランダムな性質を考慮してシミュレーションを行います。ゲームマスターやシナリオの作者が能力値とスキルを設定してキャラクター間の戦闘結果を簡単にシミュレートするためのツールを提供することを目的としています。
 
@@ -56,7 +56,7 @@ def group_b_character_init():
         character.reply_strategy = FightBackReactionStrategy()
     return characters
 
-simulator = CombatSimulator(group_a_character_init, group_b_character_init)
+simulator = CombatSimulator(group_a_character_init, group_b_character_init) # be careful to pass function not object
 results = simulator.simulate_multiple_combats(10000)
 print(results)
 

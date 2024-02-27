@@ -22,6 +22,6 @@ def group_b_character_init():
         character.reply_strategy = FightBackReactionStrategy()
     return characters
 
-simulator = CombatSimulator(group_a_character_init, group_b_character_init)
+simulator = CombatSimulator(group_a_character_init, group_b_character_init) # be careful to pass function not object
 results = simulator.simulate_multiple_combats(10000)
 print(results)

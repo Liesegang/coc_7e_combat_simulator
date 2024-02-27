@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 import random
 
 from .strategies.reaction import NothingReactionStrategy
@@ -70,7 +70,7 @@ class Character:
             raise ValueError("skill must be an instance of Skill")
         self.skills.append(skill)
 
-    def get_skill(self, skill_name: str) -> Skill | None:
+    def get_skill(self, skill_name: str) -> Union[Skill, None]:
         for skill in self.skills:
             if skill.name == skill_name:
                 return skill

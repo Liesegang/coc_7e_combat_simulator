@@ -1,7 +1,7 @@
 import unittest
 from coc7e_combat_simulator.dice_parser import DiceParser
 from unittest.mock import patch
-import random
+
 
 class TestDiceParser(unittest.TestCase):
     def setUp(self):
@@ -60,40 +60,40 @@ class TestDiceParser(unittest.TestCase):
         self.assertEqual(self.parser.parse("3+-5")[0], -2)
         self.assertEqual(self.parser.parse("-3+5")[0], 2)
 
-    @patch('random.randint')
+    @patch("random.randint")
     def test_dice_roll_fixed_value(self, mock_randint):
-        mock_randint.side_effect=[3, 4]
+        mock_randint.side_effect = [3, 4]
         result, rolls = self.parser.parse("2d6")
 
         self.assertEqual(result, 7)
         self.assertEqual(rolls[0].roll, 7)
         self.assertEqual(rolls[0].details, [3, 4])
 
-    @patch('random.randint')
+    @patch("random.randint")
     def test_dice_lowercase(self, mock_randint):
-        mock_randint.return_value=3
+        mock_randint.return_value = 3
         parser = DiceParser()
         result, rolls = parser.parse("1d6")
         self.assertEqual(result, 3)
         self.assertEqual(rolls[0].roll, 3)
         self.assertEqual(rolls[0].details[0], 3)
 
-    @patch('random.randint')
+    @patch("random.randint")
     def test_multiple_dice_rolls(self, mock_randint):
-        mock_randint.side_effect=[2, 1, 5, 3, 6]
+        mock_randint.side_effect = [2, 1, 5, 3, 6]
         result, rolls = self.parser.parse("2d4+3d6")
 
         self.assertEqual(result, sum([2, 1, 5, 3, 6]))
         self.assertEqual(rolls[0].details, [2, 1])
         self.assertEqual(rolls[1].details, [5, 3, 6])
 
-    @patch('random.randint')
+    @patch("random.randint")
     def test_complex_expression(self, mock_randint):
         mock_randint.side_effect = [4, 3, 5]
 
         parser = DiceParser()
         expression = "(3D6+2)*5-10/{HP}"
-        parameters = {'HP': 2}
+        parameters = {"HP": 2}
 
         result, rolls = parser.parse(expression, parameters)
 
@@ -101,7 +101,7 @@ class TestDiceParser(unittest.TestCase):
         self.assertTrue(len(rolls) > 0)
 
         expected_rolls_result = sum([4, 3, 5])
-        expected_total = ((expected_rolls_result + 2) * 5) - (10 / parameters['HP'])
+        expected_total = ((expected_rolls_result + 2) * 5) - (10 / parameters["HP"])
         self.assertEqual(result, expected_total)
 
         self.assertEqual(rolls[0].details, [4, 3, 5])
@@ -126,7 +126,9 @@ class TestDiceParser(unittest.TestCase):
         ]
         for expr, expected_value in tests:
             with self.subTest(expr=expr):
-                self.assertAlmostEqual(self.parser.expected(expr), expected_value, places=2)
+                self.assertAlmostEqual(
+                    self.parser.expected(expr), expected_value, places=2
+                )
 
     def test_minimum_value(self):
         tests = [
@@ -154,5 +156,6 @@ class TestDiceParser(unittest.TestCase):
             with self.subTest(expr=expr):
                 self.assertEqual(self.parser.maximum(expr), max_value)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

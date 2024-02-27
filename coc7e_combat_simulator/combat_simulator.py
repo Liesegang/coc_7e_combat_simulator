@@ -12,6 +12,7 @@ from .dice_parser import DiceParser
 logger = logging.getLogger(__name__)
 dice_parser = DiceParser()
 
+
 class LevelOfSuccess(IntEnum):
     CRITICAL = 0
     SPECIAL = 1
@@ -20,8 +21,13 @@ class LevelOfSuccess(IntEnum):
     FAILURE = 4
     FUMBLE = 5
 
+
 class CombatSimulator:
-    def __init__(self, group_a_characters_init_strategy: Callable[[], List[Character]], group_b_characters_init_strategy: Callable[[], List[Character]]):
+    def __init__(
+        self,
+        group_a_characters_init_strategy: Callable[[], List[Character]],
+        group_b_characters_init_strategy: Callable[[], List[Character]],
+    ):
         self.group_a_characters_init_strategy = group_a_characters_init_strategy
         self.group_b_characters_init_strategy = group_b_characters_init_strategy
 
@@ -34,7 +40,9 @@ class CombatSimulator:
         if skill.physical_attack:
             damage_result += dice_parser.parse(character.db)[0]
 
-        logger.info(f"{character.name} in side {character.side} dealt {damage_result} damage.")
+        logger.info(
+            f"{character.name} in side {character.side} dealt {damage_result} damage."
+        )
         return damage_result
 
     @staticmethod
@@ -54,47 +62,100 @@ class CombatSimulator:
             return LevelOfSuccess.FUMBLE
 
     def someone_left_alive(self, characters: List[Character], side: str) -> bool:
-        return any(character.hp > 0 for character in characters if character.side == side)
+        return any(
+            character.hp > 0 for character in characters if character.side == side
+        )
 
-    def check_damage(self, character: Character, skill: Skill, target: Character) -> None:
+    def check_damage(
+        self, character: Character, skill: Skill, target: Character
+    ) -> None:
         reply = target.reply_strategy.reply(target, character)
         if skill.name != "Fighting (Brawl)" or reply == ReactionType.NOTHING:
             if self.check_level_of_success(skill) >= LevelOfSuccess.SUCCESS:
                 damage = self.calculate_damage(character, skill)
                 target.hp -= damage
-                logger.info(f"{character.name} in side {character.side} attacked {target.name} and dealt {damage} damage.")
+                logger.info(
+                    f"{character.name} in side {character.side} attacked {target.name} and dealt {damage} damage."
+                )
                 return
         elif reply == ReactionType.DODGE:
             attacker_level_of_success = self.check_level_of_success(skill)
-            dodge_skill = list(filter(lambda skill: skill.name == "Dodge", target.skills))[0] if list(filter(lambda skill: skill.name == "Dodge", target.skills)) else Skill("Dodge", target.attributes.dexterity // 5 * 3, "0", physical_attack=False)
+            dodge_skill = (
+                list(filter(lambda skill: skill.name == "Dodge", target.skills))[0]
+                if list(filter(lambda skill: skill.name == "Dodge", target.skills))
+                else Skill(
+                    "Dodge",
+                    target.attributes.dexterity // 5 * 3,
+                    "0",
+                    physical_attack=False,
+                )
+            )
             dodge_level_of_success = self.check_level_of_success(dodge_skill)
-            if attacker_level_of_success > dodge_level_of_success and attacker_level_of_success >= LevelOfSuccess.SUCCESS:
+            if (
+                attacker_level_of_success > dodge_level_of_success
+                and attacker_level_of_success >= LevelOfSuccess.SUCCESS
+            ):
                 damage = self.calculate_damage(character, skill)
                 target.hp -= damage
-                logger.info(f"{character.name} in side {character.side} attacked {target.name} and dealt {damage} damage.")
+                logger.info(
+                    f"{character.name} in side {character.side} attacked {target.name} and dealt {damage} damage."
+                )
                 return
-            elif attacker_level_of_success <= dodge_level_of_success and dodge_level_of_success >= LevelOfSuccess.SUCCESS:
-                logger.info(f"{target.name} in side {target.side} dodged {character.name}'s attack.")
+            elif (
+                attacker_level_of_success <= dodge_level_of_success
+                and dodge_level_of_success >= LevelOfSuccess.SUCCESS
+            ):
+                logger.info(
+                    f"{target.name} in side {target.side} dodged {character.name}'s attack."
+                )
                 return
             else:
-                logger.info(f"{character.name} in side {character.side} failed to attack {target.name}.")
+                logger.info(
+                    f"{character.name} in side {character.side} failed to attack {target.name}."
+                )
                 return
         elif reply == ReactionType.FIGHT_BACK:
             attacker_level_of_success = self.check_level_of_success(skill)
-            fight_back_skill = list(filter(lambda skill: skill.name == "Fighting (Brawl)", target.skills))[0] if list(filter(lambda skill: skill.name == "Fighting (Brawl)", target.skills)) else FightingBrawl
-            fight_back_skill_level_of_success = self.check_level_of_success(fight_back_skill)
-            if attacker_level_of_success >= fight_back_skill_level_of_success and attacker_level_of_success >= LevelOfSuccess.SUCCESS:
+            fight_back_skill = (
+                list(
+                    filter(
+                        lambda skill: skill.name == "Fighting (Brawl)", target.skills
+                    )
+                )[0]
+                if list(
+                    filter(
+                        lambda skill: skill.name == "Fighting (Brawl)", target.skills
+                    )
+                )
+                else FightingBrawl
+            )
+            fight_back_skill_level_of_success = self.check_level_of_success(
+                fight_back_skill
+            )
+            if (
+                attacker_level_of_success >= fight_back_skill_level_of_success
+                and attacker_level_of_success >= LevelOfSuccess.SUCCESS
+            ):
                 damage = self.calculate_damage(character, skill)
                 target.hp -= damage
-                logger.info(f"{character.name} in side {character.side} attacked {target.name} and dealt {damage} damage.")
+                logger.info(
+                    f"{character.name} in side {character.side} attacked {target.name} and dealt {damage} damage."
+                )
                 return
-            elif attacker_level_of_success < fight_back_skill_level_of_success and fight_back_skill_level_of_success >= LevelOfSuccess.SUCCESS:
+            elif (
+                attacker_level_of_success < fight_back_skill_level_of_success
+                and fight_back_skill_level_of_success >= LevelOfSuccess.SUCCESS
+            ):
                 damage = self.calculate_damage(target, fight_back_skill)
                 character.hp -= damage
-                logger.info(f"{target.name} in side {target.side} fought back {character.name} and dealt {damage} damage.")
+                logger.info(
+                    f"{target.name} in side {target.side} fought back {character.name} and dealt {damage} damage."
+                )
                 return
             else:
-                logger.info(f"{character.name} in side {character.side} failed to attack {target.name}.")
+                logger.info(
+                    f"{character.name} in side {character.side} failed to attack {target.name}."
+                )
                 return
 
     def combat_simulation_single(self) -> str:
@@ -110,20 +171,33 @@ class CombatSimulator:
 
         characters = characters_a + characters_b
 
-        characters.sort(key=lambda character: (character.attributes.dexterity, random.random()), reverse=True)
+        characters.sort(
+            key=lambda character: (character.attributes.dexterity, random.random()),
+            reverse=True,
+        )
 
         round = 1
         try:
-            while self.someone_left_alive(characters, "A") and self.someone_left_alive(characters, "B"):
+            while self.someone_left_alive(characters, "A") and self.someone_left_alive(
+                characters, "B"
+            ):
                 self.print_character_status(round, characters)
                 for character in characters:
                     if character.hp > 0:
-                        target_candidates = [target for target in characters if target.side != character.side and target.hp > 0]
+                        target_candidates = [
+                            target
+                            for target in characters
+                            if target.side != character.side and target.hp > 0
+                        ]
                         if not target_candidates:
                             raise CombatEnd()
 
-                        target = character.target_selection_strategy.select_target(character, characters)
-                        skill = character.skill_selection_strategy.select_skill(character)
+                        target = character.target_selection_strategy.select_target(
+                            character, characters
+                        )
+                        skill = character.skill_selection_strategy.select_skill(
+                            character
+                        )
 
                         self.check_damage(character, skill, target)
                 round += 1

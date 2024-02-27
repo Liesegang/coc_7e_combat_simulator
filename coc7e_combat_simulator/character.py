@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import List
 import random
 
@@ -7,6 +6,7 @@ from .strategies.skill_selection import RandomSkillSelectionStrategy
 from .strategies.target_selection import RandomTargetSelectionStrategy
 from .attribute import Attribute
 from .skill import Skill
+
 
 class Character:
     def __init__(self, name: str, attributes: Attribute, skills: List[Skill]):
@@ -24,7 +24,9 @@ class Character:
         self.reply_strategy = NothingReactionStrategy()
 
     @classmethod
-    def of(cls, name: str, attribute_params: dict, skills: List[Skill] = []) -> "Character":
+    def of(
+        cls, name: str, attribute_params: dict, skills: List[Skill] = []
+    ) -> "Character":
         attributes = Attribute(**attribute_params)
         return cls(name, attributes, skills)
 

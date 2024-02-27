@@ -1,7 +1,10 @@
 import unittest
-from coc7e_combat_simulator.strategies.skill_selection import ExpectedDamageMaximizationSkillSelectionStrategy
+from coc7e_combat_simulator.strategies.skill_selection import (
+    ExpectedDamageMaximizationSkillSelectionStrategy,
+)
 from coc7e_combat_simulator.character import Character
 from coc7e_combat_simulator.skill import Skill
+
 
 class TestSkillSelection(unittest.TestCase):
     def setUp(self):
@@ -25,5 +28,6 @@ class TestSkillSelection(unittest.TestCase):
         selected_skill = self.strategy.select_skill(character)
         self.assertEqual(selected_skill, skill3)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

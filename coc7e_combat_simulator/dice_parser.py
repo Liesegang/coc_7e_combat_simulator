@@ -5,7 +5,9 @@ import ply.yacc as yacc
 import random
 
 import logging
+
 logger = logging.getLogger(__name__)
+
 
 class RollDetails:
     def __init__(self, roll: int, details: list[int]):
@@ -14,6 +16,8 @@ class RollDetails:
 
     def __repr__(self) -> str:
         return f"Roll: {self.roll}, Details: {self.details}"
+
+
 class DiceParser:
     class Mode(Enum):
         ROLL = 1
@@ -91,7 +95,7 @@ class DiceParser:
             p[0] = p[1] % p[3]
         elif p[2].lower() == "d":
             dice_faces = p[3]
-            dice_count =p[1]
+            dice_count = p[1]
             if self.mode == self.Mode.ROLL:
                 rolls = [random.randint(1, dice_faces) for _ in range(dice_count)]
                 p[0] = sum(rolls)
@@ -140,7 +144,9 @@ class DiceParser:
         else:
             print("Syntax error at EOF")
 
-    def parse(self, expression: str, parameters=None) -> Tuple[float, list[RollDetails]]:
+    def parse(
+        self, expression: str, parameters=None
+    ) -> Tuple[float, list[RollDetails]]:
         logger.info(f"Parsing {expression} with parameters {parameters}")
         self.current_parameters = parameters if parameters is not None else {}
         self.dice_rolls = []
@@ -149,7 +155,9 @@ class DiceParser:
         return result, self.dice_rolls
 
     def expected(self, expression: str, parameters=None) -> float:
-        logger.info(f"Calculating expected value of {expression} with parameters {parameters}")
+        logger.info(
+            f"Calculating expected value of {expression} with parameters {parameters}"
+        )
         self.current_parameters = parameters if parameters is not None else {}
         self.dice_rolls = []
         self.mode = self.Mode.EXPECTED
@@ -157,7 +165,9 @@ class DiceParser:
         return result
 
     def maximum(self, expression: str, parameters=None) -> float:
-        logger.info(f"Calculating maximum value of {expression} with parameters {parameters}")
+        logger.info(
+            f"Calculating maximum value of {expression} with parameters {parameters}"
+        )
         self.current_parameters = parameters if parameters is not None else {}
         self.dice_rolls = []
         self.mode = self.Mode.MAXIMUM
@@ -165,7 +175,9 @@ class DiceParser:
         return result
 
     def minimum(self, expression: str, parameters=None) -> float:
-        logger.info(f"Calculating minimum value of {expression} with parameters {parameters}")
+        logger.info(
+            f"Calculating minimum value of {expression} with parameters {parameters}"
+        )
         self.current_parameters = parameters if parameters is not None else {}
         self.dice_rolls = []
         self.mode = self.Mode.MINIMUM

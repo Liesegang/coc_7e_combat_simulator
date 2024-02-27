@@ -1,11 +1,12 @@
 from enum import IntEnum
 import random
 import logging
-from typing import List, Tuple, Callable
+from typing import List, Callable
 import tqdm
 
-from .character import Character, ReplyType
-from .skill import Skill
+from .strategies.reaction import ReactionType
+from .character import Character
+from .skill import Skill, FightingBrawl
 from .dice_parser import DiceParser
 
 logger = logging.getLogger(__name__)
@@ -57,13 +58,13 @@ class CombatSimulator:
 
     def check_damage(self, character: Character, skill: Skill, target: Character) -> None:
         reply = target.reply_strategy.reply(target, character)
-        if skill.name != "Fighting (Brawl)" or reply == ReplyType.NOTHING:
+        if skill.name != "Fighting (Brawl)" or reply == ReactionType.NOTHING:
             if self.check_level_of_success(skill) >= LevelOfSuccess.SUCCESS:
                 damage = self.calculate_damage(character, skill)
                 target.hp -= damage
                 logger.info(f"{character.name} in side {character.side} attacked {target.name} and dealt {damage} damage.")
                 return
-        elif reply == ReplyType.DODGE:
+        elif reply == ReactionType.DODGE:
             attacker_level_of_success = self.check_level_of_success(skill)
             dodge_skill = list(filter(lambda skill: skill.name == "Dodge", target.skills))[0] if list(filter(lambda skill: skill.name == "Dodge", target.skills)) else Skill("Dodge", target.attributes.dexterity // 5 * 3, "0", physical_attack=False)
             dodge_level_of_success = self.check_level_of_success(dodge_skill)
@@ -78,9 +79,9 @@ class CombatSimulator:
             else:
                 logger.info(f"{character.name} in side {character.side} failed to attack {target.name}.")
                 return
-        elif reply == ReplyType.FIGHT_BACK:
+        elif reply == ReactionType.FIGHT_BACK:
             attacker_level_of_success = self.check_level_of_success(skill)
-            fight_back_skill = list(filter(lambda skill: skill.name == "Fighting (Brawl)", target.skills))[0] if list(filter(lambda skill: skill.name == "Fighting (Brawl)", target.skills)) else Skill("Fighting (Brawl)", 25, "1D3", physical_attack=True)
+            fight_back_skill = list(filter(lambda skill: skill.name == "Fighting (Brawl)", target.skills))[0] if list(filter(lambda skill: skill.name == "Fighting (Brawl)", target.skills)) else FightingBrawl
             fight_back_skill_level_of_success = self.check_level_of_success(fight_back_skill)
             if attacker_level_of_success >= fight_back_skill_level_of_success and attacker_level_of_success >= LevelOfSuccess.SUCCESS:
                 damage = self.calculate_damage(character, skill)
@@ -142,7 +143,7 @@ class CombatSimulator:
         for character in characters:
             logger.info(f"{character.name}: {character.hp}HP")
 
-    def simulate_multiple_combats(self, number_of_simulations: int) -> Tuple[float, float, float]:
+    def simulate_multiple_combats(self, number_of_simulations: int) -> dict:
         results = {"A": 0, "B": 0, "Draw": 0}
         for _ in tqdm.tqdm(range(number_of_simulations)):
             result = self.combat_simulation_single()

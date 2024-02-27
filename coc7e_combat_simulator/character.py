@@ -25,7 +25,7 @@ class Character:
 
     @classmethod
     def of(
-        cls, name: str, attribute_params: dict, skills: List[Skill] = []
+        cls, name: str, attribute_params: dict, skills: List[Skill]
     ) -> "Character":
         attributes = Attribute(**attribute_params)
         return cls(name, attributes, skills)
@@ -54,18 +54,16 @@ class Character:
     def calculate_db(strength: int, size: int) -> str:
         combined = strength + size
 
-        if 2 <= combined <= 64:
+        if combined <= 64:
             return "-2"
-        elif 65 <= combined <= 84:
+        elif 65 <= combined < 85:
             return "-1"
-        elif 85 <= combined <= 124:
+        elif 85 <= combined < 125:
             return "0"
-        elif 125 <= combined <= 164:
+        elif 125 <= combined < 165:
             return "1d4"
-        elif combined >= 165:
-            return "1d6"
         else:
-            return "0"
+            return str((combined - 125) // 40) + "d6"
 
     def add_skill(self, skill: Skill) -> None:
         if not isinstance(skill, Skill):

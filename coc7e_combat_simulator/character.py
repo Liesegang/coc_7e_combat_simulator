@@ -21,7 +21,7 @@ class Character:
         self.side = None
         self.target_selection_strategy = RandomTargetSelectionStrategy()
         self.skill_selection_strategy = RandomSkillSelectionStrategy()
-        self.reply_strategy = NothingReactionStrategy()
+        self.reaction_strategy = NothingReactionStrategy()
 
     @classmethod
     def of(
@@ -69,6 +69,16 @@ class Character:
         if not isinstance(skill, Skill):
             raise ValueError("skill must be an instance of Skill")
         self.skills.append(skill)
+
+    def get_skill(self, skill_name: str) -> Skill | None:
+        for skill in self.skills:
+            if skill.name == skill_name:
+                return skill
+        if skill_name == "Dodge":
+            return Skill("Dodge", self.attributes.dexterity // 2, "0")
+        if skill_name == "Fighting (Brawl)":
+            return Skill("Fighting (Brawl)", 25, "1D4")
+        return None
 
     def __repr__(self) -> str:
         skills_str = ", ".join([str(skill) for skill in self.skills])

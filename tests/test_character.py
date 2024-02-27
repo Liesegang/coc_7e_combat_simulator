@@ -43,7 +43,7 @@ class TestCharacter(unittest.TestCase):
         self.assertIsInstance(
             self.character.skill_selection_strategy, RandomSkillSelectionStrategy
         )
-        self.assertIsInstance(self.character.reply_strategy, NothingReactionStrategy)
+        self.assertIsInstance(self.character.reaction_strategy, NothingReactionStrategy)
 
     def test_character_of_method(self):
         attribute_params = {

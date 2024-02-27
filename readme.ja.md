@@ -46,14 +46,14 @@ def group_a_character_init():
     for character in characters:
         character.skill_selection_strategy = ExpectedDamageMaximizationSkillSelectionStrategy()
         character.target_selection_strategy = MaximumHpTargetSelectionStrategy()
-        character.reply_strategy = FightBackReactionStrategy()
+        character.reaction_strategy = FightBackReactionStrategy()
     return characters
 
 def group_b_character_init():
     characters = [Character.of_random(f"B_{i}", skills=[FightingBrawl]) for i in range(3)]
     for character in characters:
         character.target_selection_strategy = RandomTargetSelectionStrategy()
-        character.reply_strategy = FightBackReactionStrategy()
+        character.reaction_strategy = FightBackReactionStrategy()
     return characters
 
 simulator = CombatSimulator(group_a_character_init, group_b_character_init) # be careful to pass function not object

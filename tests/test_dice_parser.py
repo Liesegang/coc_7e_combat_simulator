@@ -1,5 +1,5 @@
 import unittest
-from dice import DiceParser
+from coc7e_combat_simulator.dice_parser import DiceParser
 
 class TestDiceParser(unittest.TestCase):
     def setUp(self):

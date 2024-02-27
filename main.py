@@ -1,4 +1,4 @@
-from combat_simulator import CombatSimulator
+from coc7e_combat_simulator.combat_simulator import CombatSimulator
 
 # group A has 4 members, group B has 3 members
 # Status of all characters are generated randomly before every combat

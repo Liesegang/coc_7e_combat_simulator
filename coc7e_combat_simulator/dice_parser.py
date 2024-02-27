@@ -38,10 +38,10 @@ class DiceParser:
             "PARAMETER",
         )
         self.precedence = (
-            ("left", "DICE"),
             ("right", "EXPONENT"),
             ("left", "PLUS", "MINUS"),
             ("left", "TIMES", "DIVIDE", "MOD"),
+            ("left", "DICE"),
             ("right", "UMINUS"),
             ("nonassoc", "LPAREN", "RPAREN"),
         )

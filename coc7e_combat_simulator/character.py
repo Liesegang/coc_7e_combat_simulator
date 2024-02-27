@@ -1,7 +1,64 @@
+from enum import Enum
 from typing import List
-from attribute import Attribute
-from skill import Skill
 import random
+
+from .attribute import Attribute
+from .dice_parser import DiceParser
+from .skill import Skill
+
+class TargetSelectionStrategy:
+    def select_target(self, character: "Character", characters: List["Character"]) -> "Character":
+        raise NotImplementedError()
+
+class RandomTargetSelectionStrategy(TargetSelectionStrategy):
+    def select_target(self, character: "Character", characters: List["Character"]) -> "Character":
+        target_candidates = [target for target in characters if target.side != character.side and target.hp > 0]
+        return random.choice(target_candidates)
+
+class MinimumHpTargetSelectionStrategy(TargetSelectionStrategy):
+    def select_target(self, character: "Character", characters: List["Character"]) -> "Character":
+        target_candidates = [target for target in characters if target.side != character.side and target.hp > 0]
+        return min(target_candidates, key=lambda target: target.hp)
+
+class MaximumHpTargetSelectionStrategy(TargetSelectionStrategy):
+    def select_target(self, character: "Character", characters: List["Character"]) -> "Character":
+        target_candidates = [target for target in characters if target.side != character.side and target.hp > 0]
+        return max(target_candidates, key=lambda target: target.hp)
+
+class SkillSelectionStrategy:
+    def select_skill(self, character: "Character") -> "Skill":
+        raise NotImplementedError()
+
+class RandomSkillSelectionStrategy(SkillSelectionStrategy):
+    def select_skill(self, character: "Character") -> "Skill":
+        return random.choice(character.skills)
+
+class ExpectedDamageMaximizationSkillSelectionStrategy(SkillSelectionStrategy):
+    dice_parser = DiceParser()
+
+    def select_skill(self, character: "Character") -> "Skill":
+        return max(character.skills, key=lambda skill: skill.success_rate / 100 * ExpectedDamageMaximizationSkillSelectionStrategy.dice_parser.expected(skill.damage))
+
+class ReplyType(Enum):
+    NOTHING = 0
+    DODGE = 1
+    FIGHT_BACK = 2
+
+class ReplyStrategy:
+    def reply(self, character: "Character", attacker: "Character") -> ReplyType:
+        raise NotImplementedError()
+
+class NothingReplyStrategy(ReplyStrategy):
+    def reply(self, character: "Character", attacker: "Character") -> ReplyType:
+        return ReplyType.NOTHING
+
+class DodgeReplyStrategy(ReplyStrategy):
+    def reply(self, character: "Character", attacker: "Character") -> ReplyType:
+        return ReplyType.DODGE
+
+class FightBackReplyStrategy(ReplyStrategy):
+    def reply(self, character: "Character", attacker: "Character") -> ReplyType:
+        return ReplyType.FIGHT_BACK
 
 class Character:
     def __init__(self, name: str, attributes: Attribute, skills: List[Skill]):
@@ -13,6 +70,10 @@ class Character:
         self.hp = (self.attributes.constitution + self.attributes.size) // 10
         self.mp = self.attributes.power // 5
         self.db = self.calculate_db(self.attributes.strength, self.attributes.size)
+        self.side = None
+        self.target_selection_strategy = RandomTargetSelectionStrategy()
+        self.skill_selection_strategy = RandomSkillSelectionStrategy()
+        self.reply_strategy = NothingReplyStrategy()
 
     @classmethod
     def of(cls, name: str, attribute_params: dict, skills: List[Skill] = []) -> "Character":
@@ -60,13 +121,6 @@ class Character:
         if not isinstance(skill, Skill):
             raise ValueError("skill must be an instance of Skill")
         self.skills.append(skill)
-
-    def side(self) -> str:
-        return self.side
-
-    def set_side(self, side: str) -> "Character":
-        self.side = side
-        return self
 
     def __repr__(self) -> str:
         skills_str = ", ".join([str(skill) for skill in self.skills])

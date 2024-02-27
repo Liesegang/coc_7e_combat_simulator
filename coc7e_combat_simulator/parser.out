@@ -12,32 +12,33 @@ Rule 2     expression -> expression MINUS expression
 Rule 3     expression -> expression TIMES expression
 Rule 4     expression -> expression DIVIDE expression
 Rule 5     expression -> expression MOD expression
-Rule 6     expression -> expression EXPONENT expression
-Rule 7     expression -> MINUS expression
-Rule 8     expression -> LPAREN expression RPAREN
-Rule 9     expression -> DICE
-Rule 10    expression -> NUMBER
-Rule 11    expression -> PARAMETER
+Rule 6     expression -> expression DICE expression
+Rule 7     expression -> expression EXPONENT expression
+Rule 8     expression -> MINUS expression
+Rule 9     expression -> LPAREN expression RPAREN
+Rule 10    expression -> DICE
+Rule 11    expression -> NUMBER
+Rule 12    expression -> PARAMETER
 
 Terminals, with rules where they appear
 
-DICE                 : 9
+DICE                 : 6 10
 DIVIDE               : 4
-EXPONENT             : 6
-LPAREN               : 8
-MINUS                : 2 7
+EXPONENT             : 7
+LPAREN               : 9
+MINUS                : 2 8
 MOD                  : 5
-NUMBER               : 10
-PARAMETER            : 11
+NUMBER               : 11
+PARAMETER            : 12
 PLUS                 : 1
-RPAREN               : 8
+RPAREN               : 9
 TIMES                : 3
 UMINUS               : 
 error                : 
 
 Nonterminals, with rules where they appear
 
-expression           : 1 1 2 2 3 3 4 4 5 5 6 6 7 8 0
+expression           : 1 1 2 2 3 3 4 4 5 5 6 6 7 7 8 9 0
 
 Parsing method: LALR
 
@@ -49,16 +50,17 @@ state 0
     (3) expression -> . expression TIMES expression
     (4) expression -> . expression DIVIDE expression
     (5) expression -> . expression MOD expression
-    (6) expression -> . expression EXPONENT expression
-    (7) expression -> . MINUS expression
-    (8) expression -> . LPAREN expression RPAREN
-    (9) expression -> . DICE
-    (10) expression -> . NUMBER
-    (11) expression -> . PARAMETER
+    (6) expression -> . expression DICE expression
+    (7) expression -> . expression EXPONENT expression
+    (8) expression -> . MINUS expression
+    (9) expression -> . LPAREN expression RPAREN
+    (10) expression -> . DICE
+    (11) expression -> . NUMBER
+    (12) expression -> . PARAMETER
 
     MINUS           shift and go to state 2
-    LPAREN          shift and go to state 3
-    DICE            shift and go to state 4
+    LPAREN          shift and go to state 4
+    DICE            shift and go to state 3
     NUMBER          shift and go to state 5
     PARAMETER       shift and go to state 6
 
@@ -72,102 +74,109 @@ state 1
     (3) expression -> expression . TIMES expression
     (4) expression -> expression . DIVIDE expression
     (5) expression -> expression . MOD expression
-    (6) expression -> expression . EXPONENT expression
+    (6) expression -> expression . DICE expression
+    (7) expression -> expression . EXPONENT expression
 
     PLUS            shift and go to state 7
     MINUS           shift and go to state 8
     TIMES           shift and go to state 9
     DIVIDE          shift and go to state 10
     MOD             shift and go to state 11
-    EXPONENT        shift and go to state 12
+    DICE            shift and go to state 12
+    EXPONENT        shift and go to state 13
 
 
 state 2
 
-    (7) expression -> MINUS . expression
+    (8) expression -> MINUS . expression
     (1) expression -> . expression PLUS expression
     (2) expression -> . expression MINUS expression
     (3) expression -> . expression TIMES expression
     (4) expression -> . expression DIVIDE expression
     (5) expression -> . expression MOD expression
-    (6) expression -> . expression EXPONENT expression
-    (7) expression -> . MINUS expression
-    (8) expression -> . LPAREN expression RPAREN
-    (9) expression -> . DICE
-    (10) expression -> . NUMBER
-    (11) expression -> . PARAMETER
+    (6) expression -> . expression DICE expression
+    (7) expression -> . expression EXPONENT expression
+    (8) expression -> . MINUS expression
+    (9) expression -> . LPAREN expression RPAREN
+    (10) expression -> . DICE
+    (11) expression -> . NUMBER
+    (12) expression -> . PARAMETER
 
     MINUS           shift and go to state 2
-    LPAREN          shift and go to state 3
-    DICE            shift and go to state 4
-    NUMBER          shift and go to state 5
-    PARAMETER       shift and go to state 6
-
-    expression                     shift and go to state 13
-
-state 3
-
-    (8) expression -> LPAREN . expression RPAREN
-    (1) expression -> . expression PLUS expression
-    (2) expression -> . expression MINUS expression
-    (3) expression -> . expression TIMES expression
-    (4) expression -> . expression DIVIDE expression
-    (5) expression -> . expression MOD expression
-    (6) expression -> . expression EXPONENT expression
-    (7) expression -> . MINUS expression
-    (8) expression -> . LPAREN expression RPAREN
-    (9) expression -> . DICE
-    (10) expression -> . NUMBER
-    (11) expression -> . PARAMETER
-
-    MINUS           shift and go to state 2
-    LPAREN          shift and go to state 3
-    DICE            shift and go to state 4
+    LPAREN          shift and go to state 4
+    DICE            shift and go to state 3
     NUMBER          shift and go to state 5
     PARAMETER       shift and go to state 6
 
     expression                     shift and go to state 14
 
+state 3
+
+    (10) expression -> DICE .
+
+    PLUS            reduce using rule 10 (expression -> DICE .)
+    MINUS           reduce using rule 10 (expression -> DICE .)
+    TIMES           reduce using rule 10 (expression -> DICE .)
+    DIVIDE          reduce using rule 10 (expression -> DICE .)
+    MOD             reduce using rule 10 (expression -> DICE .)
+    DICE            reduce using rule 10 (expression -> DICE .)
+    EXPONENT        reduce using rule 10 (expression -> DICE .)
+    $end            reduce using rule 10 (expression -> DICE .)
+    RPAREN          reduce using rule 10 (expression -> DICE .)
+
+
 state 4
 
-    (9) expression -> DICE .
+    (9) expression -> LPAREN . expression RPAREN
+    (1) expression -> . expression PLUS expression
+    (2) expression -> . expression MINUS expression
+    (3) expression -> . expression TIMES expression
+    (4) expression -> . expression DIVIDE expression
+    (5) expression -> . expression MOD expression
+    (6) expression -> . expression DICE expression
+    (7) expression -> . expression EXPONENT expression
+    (8) expression -> . MINUS expression
+    (9) expression -> . LPAREN expression RPAREN
+    (10) expression -> . DICE
+    (11) expression -> . NUMBER
+    (12) expression -> . PARAMETER
 
-    PLUS            reduce using rule 9 (expression -> DICE .)
-    MINUS           reduce using rule 9 (expression -> DICE .)
-    TIMES           reduce using rule 9 (expression -> DICE .)
-    DIVIDE          reduce using rule 9 (expression -> DICE .)
-    MOD             reduce using rule 9 (expression -> DICE .)
-    EXPONENT        reduce using rule 9 (expression -> DICE .)
-    $end            reduce using rule 9 (expression -> DICE .)
-    RPAREN          reduce using rule 9 (expression -> DICE .)
+    MINUS           shift and go to state 2
+    LPAREN          shift and go to state 4
+    DICE            shift and go to state 3
+    NUMBER          shift and go to state 5
+    PARAMETER       shift and go to state 6
 
+    expression                     shift and go to state 15
 
 state 5
 
-    (10) expression -> NUMBER .
+    (11) expression -> NUMBER .
 
-    PLUS            reduce using rule 10 (expression -> NUMBER .)
-    MINUS           reduce using rule 10 (expression -> NUMBER .)
-    TIMES           reduce using rule 10 (expression -> NUMBER .)
-    DIVIDE          reduce using rule 10 (expression -> NUMBER .)
-    MOD             reduce using rule 10 (expression -> NUMBER .)
-    EXPONENT        reduce using rule 10 (expression -> NUMBER .)
-    $end            reduce using rule 10 (expression -> NUMBER .)
-    RPAREN          reduce using rule 10 (expression -> NUMBER .)
+    PLUS            reduce using rule 11 (expression -> NUMBER .)
+    MINUS           reduce using rule 11 (expression -> NUMBER .)
+    TIMES           reduce using rule 11 (expression -> NUMBER .)
+    DIVIDE          reduce using rule 11 (expression -> NUMBER .)
+    MOD             reduce using rule 11 (expression -> NUMBER .)
+    DICE            reduce using rule 11 (expression -> NUMBER .)
+    EXPONENT        reduce using rule 11 (expression -> NUMBER .)
+    $end            reduce using rule 11 (expression -> NUMBER .)
+    RPAREN          reduce using rule 11 (expression -> NUMBER .)
 
 
 state 6
 
-    (11) expression -> PARAMETER .
+    (12) expression -> PARAMETER .
 
-    PLUS            reduce using rule 11 (expression -> PARAMETER .)
-    MINUS           reduce using rule 11 (expression -> PARAMETER .)
-    TIMES           reduce using rule 11 (expression -> PARAMETER .)
-    DIVIDE          reduce using rule 11 (expression -> PARAMETER .)
-    MOD             reduce using rule 11 (expression -> PARAMETER .)
-    EXPONENT        reduce using rule 11 (expression -> PARAMETER .)
-    $end            reduce using rule 11 (expression -> PARAMETER .)
-    RPAREN          reduce using rule 11 (expression -> PARAMETER .)
+    PLUS            reduce using rule 12 (expression -> PARAMETER .)
+    MINUS           reduce using rule 12 (expression -> PARAMETER .)
+    TIMES           reduce using rule 12 (expression -> PARAMETER .)
+    DIVIDE          reduce using rule 12 (expression -> PARAMETER .)
+    MOD             reduce using rule 12 (expression -> PARAMETER .)
+    DICE            reduce using rule 12 (expression -> PARAMETER .)
+    EXPONENT        reduce using rule 12 (expression -> PARAMETER .)
+    $end            reduce using rule 12 (expression -> PARAMETER .)
+    RPAREN          reduce using rule 12 (expression -> PARAMETER .)
 
 
 state 7
@@ -178,20 +187,21 @@ state 7
     (3) expression -> . expression TIMES expression
     (4) expression -> . expression DIVIDE expression
     (5) expression -> . expression MOD expression
-    (6) expression -> . expression EXPONENT expression
-    (7) expression -> . MINUS expression
-    (8) expression -> . LPAREN expression RPAREN
-    (9) expression -> . DICE
-    (10) expression -> . NUMBER
-    (11) expression -> . PARAMETER
+    (6) expression -> . expression DICE expression
+    (7) expression -> . expression EXPONENT expression
+    (8) expression -> . MINUS expression
+    (9) expression -> . LPAREN expression RPAREN
+    (10) expression -> . DICE
+    (11) expression -> . NUMBER
+    (12) expression -> . PARAMETER
 
     MINUS           shift and go to state 2
-    LPAREN          shift and go to state 3
-    DICE            shift and go to state 4
+    LPAREN          shift and go to state 4
+    DICE            shift and go to state 3
     NUMBER          shift and go to state 5
     PARAMETER       shift and go to state 6
 
-    expression                     shift and go to state 15
+    expression                     shift and go to state 16
 
 state 8
 
@@ -201,20 +211,21 @@ state 8
     (3) expression -> . expression TIMES expression
     (4) expression -> . expression DIVIDE expression
     (5) expression -> . expression MOD expression
-    (6) expression -> . expression EXPONENT expression
-    (7) expression -> . MINUS expression
-    (8) expression -> . LPAREN expression RPAREN
-    (9) expression -> . DICE
-    (10) expression -> . NUMBER
-    (11) expression -> . PARAMETER
+    (6) expression -> . expression DICE expression
+    (7) expression -> . expression EXPONENT expression
+    (8) expression -> . MINUS expression
+    (9) expression -> . LPAREN expression RPAREN
+    (10) expression -> . DICE
+    (11) expression -> . NUMBER
+    (12) expression -> . PARAMETER
 
     MINUS           shift and go to state 2
-    LPAREN          shift and go to state 3
-    DICE            shift and go to state 4
+    LPAREN          shift and go to state 4
+    DICE            shift and go to state 3
     NUMBER          shift and go to state 5
     PARAMETER       shift and go to state 6
 
-    expression                     shift and go to state 16
+    expression                     shift and go to state 17
 
 state 9
 
@@ -224,20 +235,21 @@ state 9
     (3) expression -> . expression TIMES expression
     (4) expression -> . expression DIVIDE expression
     (5) expression -> . expression MOD expression
-    (6) expression -> . expression EXPONENT expression
-    (7) expression -> . MINUS expression
-    (8) expression -> . LPAREN expression RPAREN
-    (9) expression -> . DICE
-    (10) expression -> . NUMBER
-    (11) expression -> . PARAMETER
+    (6) expression -> . expression DICE expression
+    (7) expression -> . expression EXPONENT expression
+    (8) expression -> . MINUS expression
+    (9) expression -> . LPAREN expression RPAREN
+    (10) expression -> . DICE
+    (11) expression -> . NUMBER
+    (12) expression -> . PARAMETER
 
     MINUS           shift and go to state 2
-    LPAREN          shift and go to state 3
-    DICE            shift and go to state 4
+    LPAREN          shift and go to state 4
+    DICE            shift and go to state 3
     NUMBER          shift and go to state 5
     PARAMETER       shift and go to state 6
 
-    expression                     shift and go to state 17
+    expression                     shift and go to state 18
 
 state 10
 
@@ -247,20 +259,21 @@ state 10
     (3) expression -> . expression TIMES expression
     (4) expression -> . expression DIVIDE expression
     (5) expression -> . expression MOD expression
-    (6) expression -> . expression EXPONENT expression
-    (7) expression -> . MINUS expression
-    (8) expression -> . LPAREN expression RPAREN
-    (9) expression -> . DICE
-    (10) expression -> . NUMBER
-    (11) expression -> . PARAMETER
+    (6) expression -> . expression DICE expression
+    (7) expression -> . expression EXPONENT expression
+    (8) expression -> . MINUS expression
+    (9) expression -> . LPAREN expression RPAREN
+    (10) expression -> . DICE
+    (11) expression -> . NUMBER
+    (12) expression -> . PARAMETER
 
     MINUS           shift and go to state 2
-    LPAREN          shift and go to state 3
-    DICE            shift and go to state 4
+    LPAREN          shift and go to state 4
+    DICE            shift and go to state 3
     NUMBER          shift and go to state 5
     PARAMETER       shift and go to state 6
 
-    expression                     shift and go to state 18
+    expression                     shift and go to state 19
 
 state 11
 
@@ -270,91 +283,122 @@ state 11
     (3) expression -> . expression TIMES expression
     (4) expression -> . expression DIVIDE expression
     (5) expression -> . expression MOD expression
-    (6) expression -> . expression EXPONENT expression
-    (7) expression -> . MINUS expression
-    (8) expression -> . LPAREN expression RPAREN
-    (9) expression -> . DICE
-    (10) expression -> . NUMBER
-    (11) expression -> . PARAMETER
+    (6) expression -> . expression DICE expression
+    (7) expression -> . expression EXPONENT expression
+    (8) expression -> . MINUS expression
+    (9) expression -> . LPAREN expression RPAREN
+    (10) expression -> . DICE
+    (11) expression -> . NUMBER
+    (12) expression -> . PARAMETER
 
     MINUS           shift and go to state 2
-    LPAREN          shift and go to state 3
-    DICE            shift and go to state 4
-    NUMBER          shift and go to state 5
-    PARAMETER       shift and go to state 6
-
-    expression                     shift and go to state 19
-
-state 12
-
-    (6) expression -> expression EXPONENT . expression
-    (1) expression -> . expression PLUS expression
-    (2) expression -> . expression MINUS expression
-    (3) expression -> . expression TIMES expression
-    (4) expression -> . expression DIVIDE expression
-    (5) expression -> . expression MOD expression
-    (6) expression -> . expression EXPONENT expression
-    (7) expression -> . MINUS expression
-    (8) expression -> . LPAREN expression RPAREN
-    (9) expression -> . DICE
-    (10) expression -> . NUMBER
-    (11) expression -> . PARAMETER
-
-    MINUS           shift and go to state 2
-    LPAREN          shift and go to state 3
-    DICE            shift and go to state 4
+    LPAREN          shift and go to state 4
+    DICE            shift and go to state 3
     NUMBER          shift and go to state 5
     PARAMETER       shift and go to state 6
 
     expression                     shift and go to state 20
 
+state 12
+
+    (6) expression -> expression DICE . expression
+    (1) expression -> . expression PLUS expression
+    (2) expression -> . expression MINUS expression
+    (3) expression -> . expression TIMES expression
+    (4) expression -> . expression DIVIDE expression
+    (5) expression -> . expression MOD expression
+    (6) expression -> . expression DICE expression
+    (7) expression -> . expression EXPONENT expression
+    (8) expression -> . MINUS expression
+    (9) expression -> . LPAREN expression RPAREN
+    (10) expression -> . DICE
+    (11) expression -> . NUMBER
+    (12) expression -> . PARAMETER
+
+    MINUS           shift and go to state 2
+    LPAREN          shift and go to state 4
+    DICE            shift and go to state 3
+    NUMBER          shift and go to state 5
+    PARAMETER       shift and go to state 6
+
+    expression                     shift and go to state 21
+
 state 13
 
-    (7) expression -> MINUS expression .
+    (7) expression -> expression EXPONENT . expression
+    (1) expression -> . expression PLUS expression
+    (2) expression -> . expression MINUS expression
+    (3) expression -> . expression TIMES expression
+    (4) expression -> . expression DIVIDE expression
+    (5) expression -> . expression MOD expression
+    (6) expression -> . expression DICE expression
+    (7) expression -> . expression EXPONENT expression
+    (8) expression -> . MINUS expression
+    (9) expression -> . LPAREN expression RPAREN
+    (10) expression -> . DICE
+    (11) expression -> . NUMBER
+    (12) expression -> . PARAMETER
+
+    MINUS           shift and go to state 2
+    LPAREN          shift and go to state 4
+    DICE            shift and go to state 3
+    NUMBER          shift and go to state 5
+    PARAMETER       shift and go to state 6
+
+    expression                     shift and go to state 22
+
+state 14
+
+    (8) expression -> MINUS expression .
     (1) expression -> expression . PLUS expression
     (2) expression -> expression . MINUS expression
     (3) expression -> expression . TIMES expression
     (4) expression -> expression . DIVIDE expression
     (5) expression -> expression . MOD expression
-    (6) expression -> expression . EXPONENT expression
+    (6) expression -> expression . DICE expression
+    (7) expression -> expression . EXPONENT expression
 
-    PLUS            reduce using rule 7 (expression -> MINUS expression .)
-    MINUS           reduce using rule 7 (expression -> MINUS expression .)
-    TIMES           reduce using rule 7 (expression -> MINUS expression .)
-    DIVIDE          reduce using rule 7 (expression -> MINUS expression .)
-    MOD             reduce using rule 7 (expression -> MINUS expression .)
-    EXPONENT        reduce using rule 7 (expression -> MINUS expression .)
-    $end            reduce using rule 7 (expression -> MINUS expression .)
-    RPAREN          reduce using rule 7 (expression -> MINUS expression .)
+    PLUS            reduce using rule 8 (expression -> MINUS expression .)
+    MINUS           reduce using rule 8 (expression -> MINUS expression .)
+    TIMES           reduce using rule 8 (expression -> MINUS expression .)
+    DIVIDE          reduce using rule 8 (expression -> MINUS expression .)
+    MOD             reduce using rule 8 (expression -> MINUS expression .)
+    DICE            reduce using rule 8 (expression -> MINUS expression .)
+    EXPONENT        reduce using rule 8 (expression -> MINUS expression .)
+    $end            reduce using rule 8 (expression -> MINUS expression .)
+    RPAREN          reduce using rule 8 (expression -> MINUS expression .)
 
   ! PLUS            [ shift and go to state 7 ]
   ! MINUS           [ shift and go to state 8 ]
   ! TIMES           [ shift and go to state 9 ]
   ! DIVIDE          [ shift and go to state 10 ]
   ! MOD             [ shift and go to state 11 ]
-  ! EXPONENT        [ shift and go to state 12 ]
+  ! DICE            [ shift and go to state 12 ]
+  ! EXPONENT        [ shift and go to state 13 ]
 
 
-state 14
+state 15
 
-    (8) expression -> LPAREN expression . RPAREN
+    (9) expression -> LPAREN expression . RPAREN
     (1) expression -> expression . PLUS expression
     (2) expression -> expression . MINUS expression
     (3) expression -> expression . TIMES expression
     (4) expression -> expression . DIVIDE expression
     (5) expression -> expression . MOD expression
-    (6) expression -> expression . EXPONENT expression
+    (6) expression -> expression . DICE expression
+    (7) expression -> expression . EXPONENT expression
 
-    RPAREN          shift and go to state 21
+    RPAREN          shift and go to state 23
     PLUS            shift and go to state 7
     MINUS           shift and go to state 8
     TIMES           shift and go to state 9
     DIVIDE          shift and go to state 10
     MOD             shift and go to state 11
-    EXPONENT        shift and go to state 12
+    DICE            shift and go to state 12
+    EXPONENT        shift and go to state 13
 
 
-state 15
+state 16
 
     (1) expression -> expression PLUS expression .
     (1) expression -> expression . PLUS expression
@@ -362,10 +406,12 @@ state 15
     (3) expression -> expression . TIMES expression
     (4) expression -> expression . DIVIDE expression
     (5) expression -> expression . MOD expression
-    (6) expression -> expression . EXPONENT expression
+    (6) expression -> expression . DICE expression
+    (7) expression -> expression . EXPONENT expression
 
     PLUS            reduce using rule 1 (expression -> expression PLUS expression .)
     MINUS           reduce using rule 1 (expression -> expression PLUS expression .)
+    DICE            reduce using rule 1 (expression -> expression PLUS expression .)
     EXPONENT        reduce using rule 1 (expression -> expression PLUS expression .)
     $end            reduce using rule 1 (expression -> expression PLUS expression .)
     RPAREN          reduce using rule 1 (expression -> expression PLUS expression .)
@@ -378,10 +424,11 @@ state 15
   ! MOD             [ reduce using rule 1 (expression -> expression PLUS expression .) ]
   ! PLUS            [ shift and go to state 7 ]
   ! MINUS           [ shift and go to state 8 ]
-  ! EXPONENT        [ shift and go to state 12 ]
+  ! DICE            [ shift and go to state 12 ]
+  ! EXPONENT        [ shift and go to state 13 ]
 
 
-state 16
+state 17
 
     (2) expression -> expression MINUS expression .
     (1) expression -> expression . PLUS expression
@@ -389,10 +436,12 @@ state 16
     (3) expression -> expression . TIMES expression
     (4) expression -> expression . DIVIDE expression
     (5) expression -> expression . MOD expression
-    (6) expression -> expression . EXPONENT expression
+    (6) expression -> expression . DICE expression
+    (7) expression -> expression . EXPONENT expression
 
     PLUS            reduce using rule 2 (expression -> expression MINUS expression .)
     MINUS           reduce using rule 2 (expression -> expression MINUS expression .)
+    DICE            reduce using rule 2 (expression -> expression MINUS expression .)
     EXPONENT        reduce using rule 2 (expression -> expression MINUS expression .)
     $end            reduce using rule 2 (expression -> expression MINUS expression .)
     RPAREN          reduce using rule 2 (expression -> expression MINUS expression .)
@@ -405,10 +454,11 @@ state 16
   ! MOD             [ reduce using rule 2 (expression -> expression MINUS expression .) ]
   ! PLUS            [ shift and go to state 7 ]
   ! MINUS           [ shift and go to state 8 ]
-  ! EXPONENT        [ shift and go to state 12 ]
+  ! DICE            [ shift and go to state 12 ]
+  ! EXPONENT        [ shift and go to state 13 ]
 
 
-state 17
+state 18
 
     (3) expression -> expression TIMES expression .
     (1) expression -> expression . PLUS expression
@@ -416,13 +466,15 @@ state 17
     (3) expression -> expression . TIMES expression
     (4) expression -> expression . DIVIDE expression
     (5) expression -> expression . MOD expression
-    (6) expression -> expression . EXPONENT expression
+    (6) expression -> expression . DICE expression
+    (7) expression -> expression . EXPONENT expression
 
     PLUS            reduce using rule 3 (expression -> expression TIMES expression .)
     MINUS           reduce using rule 3 (expression -> expression TIMES expression .)
     TIMES           reduce using rule 3 (expression -> expression TIMES expression .)
     DIVIDE          reduce using rule 3 (expression -> expression TIMES expression .)
     MOD             reduce using rule 3 (expression -> expression TIMES expression .)
+    DICE            reduce using rule 3 (expression -> expression TIMES expression .)
     EXPONENT        reduce using rule 3 (expression -> expression TIMES expression .)
     $end            reduce using rule 3 (expression -> expression TIMES expression .)
     RPAREN          reduce using rule 3 (expression -> expression TIMES expression .)
@@ -432,10 +484,11 @@ state 17
   ! TIMES           [ shift and go to state 9 ]
   ! DIVIDE          [ shift and go to state 10 ]
   ! MOD             [ shift and go to state 11 ]
-  ! EXPONENT        [ shift and go to state 12 ]
+  ! DICE            [ shift and go to state 12 ]
+  ! EXPONENT        [ shift and go to state 13 ]
 
 
-state 18
+state 19
 
     (4) expression -> expression DIVIDE expression .
     (1) expression -> expression . PLUS expression
@@ -443,13 +496,15 @@ state 18
     (3) expression -> expression . TIMES expression
     (4) expression -> expression . DIVIDE expression
     (5) expression -> expression . MOD expression
-    (6) expression -> expression . EXPONENT expression
+    (6) expression -> expression . DICE expression
+    (7) expression -> expression . EXPONENT expression
 
     PLUS            reduce using rule 4 (expression -> expression DIVIDE expression .)
     MINUS           reduce using rule 4 (expression -> expression DIVIDE expression .)
     TIMES           reduce using rule 4 (expression -> expression DIVIDE expression .)
     DIVIDE          reduce using rule 4 (expression -> expression DIVIDE expression .)
     MOD             reduce using rule 4 (expression -> expression DIVIDE expression .)
+    DICE            reduce using rule 4 (expression -> expression DIVIDE expression .)
     EXPONENT        reduce using rule 4 (expression -> expression DIVIDE expression .)
     $end            reduce using rule 4 (expression -> expression DIVIDE expression .)
     RPAREN          reduce using rule 4 (expression -> expression DIVIDE expression .)
@@ -459,10 +514,11 @@ state 18
   ! TIMES           [ shift and go to state 9 ]
   ! DIVIDE          [ shift and go to state 10 ]
   ! MOD             [ shift and go to state 11 ]
-  ! EXPONENT        [ shift and go to state 12 ]
+  ! DICE            [ shift and go to state 12 ]
+  ! EXPONENT        [ shift and go to state 13 ]
 
 
-state 19
+state 20
 
     (5) expression -> expression MOD expression .
     (1) expression -> expression . PLUS expression
@@ -470,13 +526,15 @@ state 19
     (3) expression -> expression . TIMES expression
     (4) expression -> expression . DIVIDE expression
     (5) expression -> expression . MOD expression
-    (6) expression -> expression . EXPONENT expression
+    (6) expression -> expression . DICE expression
+    (7) expression -> expression . EXPONENT expression
 
     PLUS            reduce using rule 5 (expression -> expression MOD expression .)
     MINUS           reduce using rule 5 (expression -> expression MOD expression .)
     TIMES           reduce using rule 5 (expression -> expression MOD expression .)
     DIVIDE          reduce using rule 5 (expression -> expression MOD expression .)
     MOD             reduce using rule 5 (expression -> expression MOD expression .)
+    DICE            reduce using rule 5 (expression -> expression MOD expression .)
     EXPONENT        reduce using rule 5 (expression -> expression MOD expression .)
     $end            reduce using rule 5 (expression -> expression MOD expression .)
     RPAREN          reduce using rule 5 (expression -> expression MOD expression .)
@@ -486,46 +544,81 @@ state 19
   ! TIMES           [ shift and go to state 9 ]
   ! DIVIDE          [ shift and go to state 10 ]
   ! MOD             [ shift and go to state 11 ]
-  ! EXPONENT        [ shift and go to state 12 ]
+  ! DICE            [ shift and go to state 12 ]
+  ! EXPONENT        [ shift and go to state 13 ]
 
 
-state 20
+state 21
 
-    (6) expression -> expression EXPONENT expression .
+    (6) expression -> expression DICE expression .
     (1) expression -> expression . PLUS expression
     (2) expression -> expression . MINUS expression
     (3) expression -> expression . TIMES expression
     (4) expression -> expression . DIVIDE expression
     (5) expression -> expression . MOD expression
-    (6) expression -> expression . EXPONENT expression
+    (6) expression -> expression . DICE expression
+    (7) expression -> expression . EXPONENT expression
 
-    $end            reduce using rule 6 (expression -> expression EXPONENT expression .)
-    RPAREN          reduce using rule 6 (expression -> expression EXPONENT expression .)
+    DICE            reduce using rule 6 (expression -> expression DICE expression .)
+    $end            reduce using rule 6 (expression -> expression DICE expression .)
+    RPAREN          reduce using rule 6 (expression -> expression DICE expression .)
     PLUS            shift and go to state 7
     MINUS           shift and go to state 8
     TIMES           shift and go to state 9
     DIVIDE          shift and go to state 10
     MOD             shift and go to state 11
-    EXPONENT        shift and go to state 12
+    EXPONENT        shift and go to state 13
 
-  ! PLUS            [ reduce using rule 6 (expression -> expression EXPONENT expression .) ]
-  ! MINUS           [ reduce using rule 6 (expression -> expression EXPONENT expression .) ]
-  ! TIMES           [ reduce using rule 6 (expression -> expression EXPONENT expression .) ]
-  ! DIVIDE          [ reduce using rule 6 (expression -> expression EXPONENT expression .) ]
-  ! MOD             [ reduce using rule 6 (expression -> expression EXPONENT expression .) ]
-  ! EXPONENT        [ reduce using rule 6 (expression -> expression EXPONENT expression .) ]
+  ! PLUS            [ reduce using rule 6 (expression -> expression DICE expression .) ]
+  ! MINUS           [ reduce using rule 6 (expression -> expression DICE expression .) ]
+  ! TIMES           [ reduce using rule 6 (expression -> expression DICE expression .) ]
+  ! DIVIDE          [ reduce using rule 6 (expression -> expression DICE expression .) ]
+  ! MOD             [ reduce using rule 6 (expression -> expression DICE expression .) ]
+  ! EXPONENT        [ reduce using rule 6 (expression -> expression DICE expression .) ]
+  ! DICE            [ shift and go to state 12 ]
 
 
-state 21
+state 22
 
-    (8) expression -> LPAREN expression RPAREN .
+    (7) expression -> expression EXPONENT expression .
+    (1) expression -> expression . PLUS expression
+    (2) expression -> expression . MINUS expression
+    (3) expression -> expression . TIMES expression
+    (4) expression -> expression . DIVIDE expression
+    (5) expression -> expression . MOD expression
+    (6) expression -> expression . DICE expression
+    (7) expression -> expression . EXPONENT expression
 
-    PLUS            reduce using rule 8 (expression -> LPAREN expression RPAREN .)
-    MINUS           reduce using rule 8 (expression -> LPAREN expression RPAREN .)
-    TIMES           reduce using rule 8 (expression -> LPAREN expression RPAREN .)
-    DIVIDE          reduce using rule 8 (expression -> LPAREN expression RPAREN .)
-    MOD             reduce using rule 8 (expression -> LPAREN expression RPAREN .)
-    EXPONENT        reduce using rule 8 (expression -> LPAREN expression RPAREN .)
-    $end            reduce using rule 8 (expression -> LPAREN expression RPAREN .)
-    RPAREN          reduce using rule 8 (expression -> LPAREN expression RPAREN .)
+    DICE            reduce using rule 7 (expression -> expression EXPONENT expression .)
+    $end            reduce using rule 7 (expression -> expression EXPONENT expression .)
+    RPAREN          reduce using rule 7 (expression -> expression EXPONENT expression .)
+    PLUS            shift and go to state 7
+    MINUS           shift and go to state 8
+    TIMES           shift and go to state 9
+    DIVIDE          shift and go to state 10
+    MOD             shift and go to state 11
+    EXPONENT        shift and go to state 13
+
+  ! PLUS            [ reduce using rule 7 (expression -> expression EXPONENT expression .) ]
+  ! MINUS           [ reduce using rule 7 (expression -> expression EXPONENT expression .) ]
+  ! TIMES           [ reduce using rule 7 (expression -> expression EXPONENT expression .) ]
+  ! DIVIDE          [ reduce using rule 7 (expression -> expression EXPONENT expression .) ]
+  ! MOD             [ reduce using rule 7 (expression -> expression EXPONENT expression .) ]
+  ! EXPONENT        [ reduce using rule 7 (expression -> expression EXPONENT expression .) ]
+  ! DICE            [ shift and go to state 12 ]
+
+
+state 23
+
+    (9) expression -> LPAREN expression RPAREN .
+
+    PLUS            reduce using rule 9 (expression -> LPAREN expression RPAREN .)
+    MINUS           reduce using rule 9 (expression -> LPAREN expression RPAREN .)
+    TIMES           reduce using rule 9 (expression -> LPAREN expression RPAREN .)
+    DIVIDE          reduce using rule 9 (expression -> LPAREN expression RPAREN .)
+    MOD             reduce using rule 9 (expression -> LPAREN expression RPAREN .)
+    DICE            reduce using rule 9 (expression -> LPAREN expression RPAREN .)
+    EXPONENT        reduce using rule 9 (expression -> LPAREN expression RPAREN .)
+    $end            reduce using rule 9 (expression -> LPAREN expression RPAREN .)
+    RPAREN          reduce using rule 9 (expression -> LPAREN expression RPAREN .)
 

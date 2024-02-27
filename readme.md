@@ -8,6 +8,10 @@ This repository contains a Python-based combat simulator for the Call of Cthulhu
 - **Damage Bonus Calculation**: Automatically calculates a character's damage bonus based on their Strength and Size attributes.
 - **Skill System**: Allows characters to have skills that affect their performance in combat, including success rates and damage potential.
 - **Combat Simulation**: Simulates turn-based combat between two characters, considering skill success rates, damage calculation, and character health points (HP).
+- **Selection of Various Strategies**: This simulator allows for the customization of strategies in three different aspects. It is possible to select a different strategy for each character, and you can also customize your own strategies.
+  - **Enemy Selection Strategy**: Three types have been implemented: random selection, priority to the enemy with the lowest HP, and priority to the enemy with the highest HP.
+  - **Skill Selection Strategy**: Two types have been implemented: random selection, and selection of the skill with the maximum expected damage (expected damage x success rate of the skill).
+  - **Fight Back or Dodge Strategy**: Three types have been implemented: always do nothing, always fight back, and always dodge.
 
 ## Usage
 
@@ -27,14 +31,30 @@ Example:
 
 
 ```python
-from combat_simulator import CombatSimulator
+from coc7e_combat_simulator.combat_simulator import CombatSimulator
+from coc7e_combat_simulator.character import Character, FightBackReplyStrategy, MinimumHpTargetSelectionStrategy, RandomTargetSelectionStrategy, ExpectedDamageMaximizationSkillSelectionStrategy
+from coc7e_combat_simulator.skill import FightingBrawl, FirearmHandgun
 
 # group A has 4 members, group B has 3 members
 # Status of all characters are generated randomly before every combat
-simulator = CombatSimulator(4, 3)
-results = simulator.simulate_multiple_combats(100000)
-print(results)
+def group_a_character_init():
+    characters = [Character.of_random(f"A_{i}", skills=[FightingBrawl, FirearmHandgun]) for i in range(4)]
+    for character in characters:
+        character.skill_selection_strategy = ExpectedDamageMaximizationSkillSelectionStrategy()
+        character.target_selection_strategy = MinimumHpTargetSelectionStrategy()
+        character.reply_strategy = FightBackReplyStrategy()
+    return characters
 
+def group_b_character_init():
+    characters = [Character.of_random(f"B_{i}", skills=[FightingBrawl]) for i in range(3)]
+    for character in characters:
+        character.target_selection_strategy = RandomTargetSelectionStrategy()
+        character.reply_strategy = FightBackReplyStrategy()
+    return characters
+
+simulator = CombatSimulator(group_a_character_init, group_b_character_init)
+results = simulator.simulate_multiple_combats(10000)
+print(results)
 ```
 
 ## Customization

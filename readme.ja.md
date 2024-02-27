@@ -10,6 +10,10 @@
 - **ダメージボーナスとビルドの計算**: キャラクターのSTRとSIZ属性に基づいて、自動的にダメージボーナスとビルドを計算します。
 - **スキルシステム**: 戦闘でのパフォーマンスに影響を与えるスキルをキャラクターが持つことができます。これには成功率とダメージポテンシャルが含まれます。
 - **戦闘シミュレーション**: スキルの成功率、ダメージ計算、キャラクターのHPを考慮して、2つのキャラクター間の戦闘をシミュレートします。
+- **様々な戦略の選択**: 本シミュレーターは以下の3つの部分の戦略をカスタマイズすることができます。キャラクターごとに別な戦略を選択することが可能です。戦略を自分でカスタマイズすることもできます。
+  - 敵の選択戦略: ランダム、HPが最も少ない敵を優先、HPが最も多い敵を優先の3種h類が実装されています。
+  - スキルの選択戦略: ランダム、ダメージの期待値が最大のもの(ダメージの期待値 x スキルの成功率)の2種類が実装されています。
+  - 応戦、回避の戦略: 常に何もしない、常に応戦、常に回避の3種類が実装されています。
 
 ## 使用方法
 
@@ -28,14 +32,30 @@
 例:
 
 ```python
-from combat_simulator import CombatSimulator
+from coc7e_combat_simulator.combat_simulator import CombatSimulator
+from coc7e_combat_simulator.character import Character, FightBackReplyStrategy, MinimumHpTargetSelectionStrategy, RandomTargetSelectionStrategy, ExpectedDamageMaximizationSkillSelectionStrategy
+from coc7e_combat_simulator.skill import FightingBrawl, FirearmHandgun
 
 # group A has 4 members, group B has 3 members
 # Status of all characters are generated randomly before every combat
-simulator = CombatSimulator(4, 3)
-results = simulator.simulate_multiple_combats(100000)
-print(results)
+def group_a_character_init():
+    characters = [Character.of_random(f"A_{i}", skills=[FightingBrawl, FirearmHandgun]) for i in range(4)]
+    for character in characters:
+        character.skill_selection_strategy = ExpectedDamageMaximizationSkillSelectionStrategy()
+        character.target_selection_strategy = MinimumHpTargetSelectionStrategy()
+        character.reply_strategy = FightBackReplyStrategy()
+    return characters
 
+def group_b_character_init():
+    characters = [Character.of_random(f"B_{i}", skills=[FightingBrawl]) for i in range(3)]
+    for character in characters:
+        character.target_selection_strategy = RandomTargetSelectionStrategy()
+        character.reply_strategy = FightBackReplyStrategy()
+    return characters
+
+simulator = CombatSimulator(group_a_character_init, group_b_character_init)
+results = simulator.simulate_multiple_combats(10000)
+print(results)
 ```
 
 ## カスタマイズ

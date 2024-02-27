@@ -1,5 +1,7 @@
 import unittest
 from coc7e_combat_simulator.dice_parser import DiceParser
+from unittest.mock import patch
+import random
 
 class TestDiceParser(unittest.TestCase):
     def setUp(self):
@@ -53,19 +55,59 @@ class TestDiceParser(unittest.TestCase):
         self.assertEqual(parser.parse("3+-5")[0], -2)
         self.assertEqual(parser.parse("-3+5")[0], 2)
 
-    def test_dice_lowercase(self):
-        parser = DiceParser()
-        result, rolls = parser.parse("1d6")
-        self.assertTrue(1 <= result <= 6)  # 1d6の結果が1から6の間にあるか
-        self.assertEqual(len(rolls[0]["details"]), 1)  # 1回振られたことを確認
+    def test_dice_roll_fixed_value(self):
+        with patch('random.randint', side_effect=[3, 4]):
+            parser = DiceParser()
+            result, rolls = parser.parse("2d6")
 
-    def test_complex_expression(self):
+            self.assertEqual(result, 7)
+
+            self.assertEqual(len(rolls), 1)
+            self.assertEqual(len(rolls[0]["details"]), 2)
+
+            self.assertEqual(rolls[0]["details"][0], 3)
+            self.assertEqual(rolls[0]["details"][1], 4)
+
+    def test_dice_lowercase(self):
+        with patch('random.randint', return_value=3):
+            parser = DiceParser()
+            result, rolls = parser.parse("1d6")
+            self.assertEqual(result, 3)
+            self.assertEqual(len(rolls), 1)
+            self.assertEqual(rolls[0]["roll"], 3)
+            self.assertEqual(rolls[0]["details"][0], 3)
+
+    def test_dice_multiple_rolls(self):
+        with patch('random.randint', side_effect=[2, 1, 5, 3, 6]):
+            parser = DiceParser()
+            result, rolls = parser.parse("2d4+3d6")
+
+            expected_total = (2 + 1) + (5 + 3 + 6)
+            self.assertEqual(result, expected_total)
+
+            self.assertEqual(len(rolls), 2)
+
+            self.assertEqual(rolls[0]["details"], [2, 1])
+            self.assertEqual(rolls[1]["details"], [5, 3, 6])
+
+    @patch('random.randint')
+    def test_complex_expression(self, mock_randint):
+        mock_randint.side_effect = [4, 3, 5]
+
         parser = DiceParser()
         expression = "(3D6+2)*5-10/{HP}"
         parameters = {'HP': 2}
+
         result, rolls = parser.parse(expression, parameters)
-        self.assertTrue(result is not None)  # 結果が計算されることを確認
-        self.assertTrue(len(rolls) > 0)  # ダイスが少なくとも1回は振られることを確認
+
+        self.assertTrue(result is not None)
+        self.assertTrue(len(rolls) > 0)
+
+        expected_rolls_result = sum([4, 3, 5])
+        expected_total = ((expected_rolls_result + 2) * 5) - (10 / parameters['HP'])
+        self.assertEqual(result, expected_total)
+
+        self.assertEqual(rolls[0]["details"], [4, 3, 5])
 
     def test_exponent_operation(self):
         parser = DiceParser()

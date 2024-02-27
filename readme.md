@@ -60,7 +60,7 @@ print(results)
 ## Customization
 
 - **Character Creation**: You can customize characters further by adding or modifying skills and attributes as needed.
-- **Combat Logic**: The combat simulation logic can be adjusted to incorporate additional factors like environmental effects, special abilities, or more complex skill interactions.
+- **Combat Strategy**: For each character, you can customize the strategy for choosing attack targets, selecting skills, and deciding whether to respond or evade.
 
 ## Contributing
 
